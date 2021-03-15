@@ -1,0 +1,31 @@
+{
+  "name": "news_server",
+  "version": "1.0.0",
+  "description": "This is the Project of News Feed",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Umer Farooq",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^7.4.2",
+    "aws-sdk": "^2.834.0",
+    "bcrypt": "^5.0.0",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.9.2",
+    "google-auth-library": "^6.1.5",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.13",
+    "morgan": "^1.10.0",
+    "node-cron": "^2.0.3",
+    "randomstring": "^1.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
