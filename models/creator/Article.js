@@ -11,7 +11,15 @@ const FormSchema = new Schema(
       type: String,
       required: false,
     },
-    address: {
+    address1: {
+      type: String,
+      required: false,
+    },
+    address2: {
+      type: String,
+      required: false,
+    },
+    city: {
       type: String,
       required: false,
     },
@@ -19,7 +27,7 @@ const FormSchema = new Schema(
       type: String,
       required: false,
     },
-    postcode: {
+    postCode: {
       type: String,
       required: false,
     },
@@ -31,6 +39,27 @@ const FormSchema = new Schema(
       type: String,
       required: false,
     },
+    cardHolderName: {
+      type: String,
+      required: false,
+    },
+    cardNumber: {
+      type: String,
+      required: false,
+    },
+    cvv: {
+      type: String,
+      required: false,
+    },
+    expiryDate: {
+      type: String,
+      required: false,
+    },
+    referenceId: {
+      type: String,
+      required: false,
+    },
+    
     peoples: [
       {
         Person: {
@@ -65,6 +94,10 @@ const FormSchema = new Schema(
           type: String,
           required: false,
         },
+        referenceId: {
+          type: String,
+          required: false,
+        },
       },
     ],
   },
@@ -72,5 +105,7 @@ const FormSchema = new Schema(
     timestamps: true,
   }
 );
+
+
 
 module.exports = mongoose.model("Form", FormSchema);

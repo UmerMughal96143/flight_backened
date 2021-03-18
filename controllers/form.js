@@ -1,39 +1,57 @@
-const Article = require('../models/creator/Article');
-const Form = require('../models/creator/Article')
-
-
-
-
-
+const { count } = require("../models/creator/Article");
+const Article = require("../models/creator/Article");
+const Form = require("../models/creator/Article");
 
 const flightForm = async (req, res, next) => {
-    try {
-     console.log(req.body.data)
-     let formData = {
-      title : req.body.data[0].title,
-      testLocation : req.body.data[1].testLocation,
-      address : req.body.data[2].address,
-      postcode : req.body.data[2].postcode,
-      flightTime : req.body.data[3].flightTime.Hours,
-      startDate : req.body.data[3].startDate,
-     }
-     let savedform = await Article.create(formData)
-     if(savedform){
-       for(var i = 0 ; i < req.body.peoplesData.length ; i++){
-         savedform.peoples.push(req.body.peoplesData[i])
-        }
-        
+  try {
+    let allFormsLength = await Form.find();
+    var counter = 0;
+    console.log(
+      "🚀 ~ file: form.js ~ line 7 ~ flightForm ~ allFormsLength",
+      allFormsLength
+    );
+    for (i = 0; i < allFormsLength.length; i++) {
+      if (allFormsLength.length > 0) {
+        counter = allFormsLength[i].peoples.length + counter;
       }
-      console.log("🚀 ~ file: form.js ~ line 24 ~ flightForm ~ savedform", savedform)
-      await savedform.save()
-      res.status(200).json({ success: true, msg: "Send link to your email",savedform });
-    } catch (err) {
-      res.status(500).json({ success: false, error: err.message });
     }
-  };
+    let formData = {
+      title: req.body.data[0].title,
+      testLocation: req.body.data[1].testLocation,
+      address1: req.body.data[2].address1,
+      address2: req.body.data[2].address2,
+      postCode: req.body.data[2].postCode,
+      city: req.body.data[2].city,
+      flightTime: req.body.data[3].flightTime.Hours,
+      startDate: req.body.data[3].startDate,
+      cardHolderName: req.body.paymentData.cardHolderName,
+      cardNumber: req.body.paymentData.cardNumber,
+      cvv: req.body.paymentData.cvv,
+      expiryDate: req.body.paymentData.expiryDate,
+      referenceId: `AH/2021 ${allFormsLength.length + 1}`,
+    };
+    let savedform = await Article.create(formData);
+    const counterSaver = () => {
+      return counter = counter + 1
+    }
+    if (savedform) {
+      for (var i = 0; i < req.body.peoplesData.length; i++) {
+        req.body.peoplesData[i].referenceId = `AH/2021 ${counterSaver()}`;
+        console.log(
+          "🚀 ~ file: form.js ~ line 27 ~ flightForm ~ req.body.peoplesData",
+          req.body.peoplesData
+        );
+        savedform.peoples.push(req.body.peoplesData[i]);
+      }
+    }
+    console.log(counter, "counter");
+    await savedform.save();
+    res.status(200).json({ success: true, savedform });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 
-
-
-  module.exports = {
-    flightForm,
-  };
+module.exports = {
+  flightForm,
+};
