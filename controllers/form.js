@@ -36,11 +36,7 @@ const flightForm = async (req, res, next) => {
     }
     if (savedform) {
       for (var i = 0; i < req.body.peoplesData.length; i++) {
-        req.body.peoplesData[i].referenceId = `AH/2021 ${counterSaver()}`;
-        console.log(
-          "🚀 ~ file: form.js ~ line 27 ~ flightForm ~ req.body.peoplesData",
-          req.body.peoplesData
-        );
+        req.body.peoplesData[i].referenceId = `AH/2021${counterSaver()}`;
         savedform.peoples.push(req.body.peoplesData[i]);
       }
     }
