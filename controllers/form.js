@@ -1,4 +1,3 @@
-const { count } = require("../models/creator/Article");
 const Article = require("../models/creator/Article");
 const Form = require("../models/creator/Article");
 
@@ -6,10 +5,6 @@ const flightForm = async (req, res, next) => {
   try {
     let allFormsLength = await Form.find();
     var counter = 0;
-    console.log(
-      "🚀 ~ file: form.js ~ line 7 ~ flightForm ~ allFormsLength",
-      allFormsLength
-    );
     for (i = 0; i < allFormsLength.length; i++) {
       if (allFormsLength.length > 0) {
         counter = allFormsLength[i].peoples.length + counter;
@@ -48,6 +43,23 @@ const flightForm = async (req, res, next) => {
   }
 };
 
+
+const getAllForms = async (req, res, next) => {
+  try {
+    let forms = await Form.find();
+    res.status(200).json({ success: true, forms });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+
+
+
+
+
+
 module.exports = {
   flightForm,
+  getAllForms
 };

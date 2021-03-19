@@ -5,6 +5,7 @@ const colors = require('colors')
 const cors = require('cors')
 const connectDB = require('./config/db');
 const formRoute = require('./routes/form')
+const authRoute = require('./routes/auth')
 
 
 
@@ -30,14 +31,9 @@ const PORT = process.env.PORT || 3008 ;
 
 
 app.use('/flight/api/v1',formRoute)
+app.use('/flight/api/v1/auth',authRoute)
 
 
-
-
-
-
-
-// console.log(Math.floor(100000 + Math.random() * 900000));
 
 
 
