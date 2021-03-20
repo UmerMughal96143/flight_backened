@@ -63,7 +63,10 @@ const FormSchema = new Schema(
       type: String,
       required: false,
     },
-    
+    testType : {
+      type: String,
+      required: false,
+    },
     peoples: [
       {
         Person: {

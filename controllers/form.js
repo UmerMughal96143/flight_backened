@@ -12,6 +12,7 @@ const flightForm = async (req, res, next) => {
     }
     let formData = {
       title: req.body.data[0].title,
+      testType : req.body.data[0].testType,
       testLocation: req.body.data[1].testLocation,
       address1: req.body.data[2].address1,
       address2: req.body.data[2].address2,
