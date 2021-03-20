@@ -55,7 +55,11 @@ const FormSchema = new Schema(
       type: String,
       required: false,
     },
-    referenceId: {
+    appointmentDate : {
+      type: String,
+      required: false,
+    },
+    amountPaid : {
       type: String,
       required: false,
     },

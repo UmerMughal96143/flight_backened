@@ -24,6 +24,8 @@ const flightForm = async (req, res, next) => {
       cvv: req.body.paymentData.cvv,
       expiryDate: req.body.paymentData.expiryDate,
       referenceId: `AH/2021 ${allFormsLength.length + 1}`,
+      amountPaid : req.body.amountPaid,
+      appointmentDate : req.body.appointmentDate
     };
     let savedform = await Article.create(formData);
     const counterSaver = () => {
