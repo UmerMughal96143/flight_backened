@@ -12,7 +12,7 @@ const flightForm = async (req, res, next) => {
     }
     let formData = {
       title: req.body.data[0].title,
-      testType : req.body.data[0].testType,
+      testType: req.body.data[0].testType,
       testLocation: req.body.data[1].testLocation,
       address1: req.body.data[2].address1,
       address2: req.body.data[2].address2,
@@ -25,20 +25,19 @@ const flightForm = async (req, res, next) => {
       cvv: req.body.paymentData.cvv,
       expiryDate: req.body.paymentData.expiryDate,
       referenceId: `AH/2021 ${allFormsLength.length + 1}`,
-      amountPaid : req.body.amountPaid,
-      appointmentDate : req.body.appointmentDate
+      amountPaid: req.body.amountPaid,
+      appointmentDate: req.body.appointmentDate,
     };
     let savedform = await Article.create(formData);
     const counterSaver = () => {
-      return counter = counter + 1
-    }
+      return (counter = counter + 1);
+    };
     if (savedform) {
       for (var i = 0; i < req.body.peoplesData.length; i++) {
         req.body.peoplesData[i].referenceId = `AH/2021${counterSaver()}`;
         savedform.peoples.push(req.body.peoplesData[i]);
       }
     }
-    console.log(counter, "counter");
     await savedform.save();
     res.status(200).json({ success: true, savedform });
   } catch (err) {
@@ -46,10 +45,9 @@ const flightForm = async (req, res, next) => {
   }
 };
 
-
 const getAllForms = async (req, res, next) => {
   try {
-    let forms = await Form.find();
+    let forms = await Form.find({ testLocation: req.query.id });
     res.status(200).json({ success: true, forms });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -57,12 +55,32 @@ const getAllForms = async (req, res, next) => {
 };
 
 
+const getSingleForm = async (req, res, next) => {
+  try {
+    let forms = await Form.findOne({'peoples': {$elemMatch: {referenceId: req.query.id}}});
+    res.status(200).json({ success: true, forms });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 
 
-
-
+const changeStatusOfApplication = async (req, res, next) => {
+  try {
+    if(!req.query.id){
+      return res.status(400).json({status : false , msg : 'Query not Exist'})
+    }
+    let forms = await Form.findOneAndUpdate({'peoples.referenceId': req.query.id}, {$set: { "peoples.$.status" : true }});
+   
+    res.status(200).json({ success: true, forms });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 
 module.exports = {
   flightForm,
-  getAllForms
+  getAllForms,
+  getSingleForm,
+  changeStatusOfApplication
 };
