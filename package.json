@@ -24,6 +24,9 @@
     "mongoose": "^5.11.13",
     "morgan": "^1.10.0",
     "node-cron": "^2.0.3",
+    "nodemailer": "^6.5.0",
+    "qr-image": "^3.2.0",
+    "qrcode": "^1.4.4",
     "randomstring": "^1.1.5"
   },
   "devDependencies": {

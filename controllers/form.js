@@ -1,5 +1,6 @@
 const Article = require("../models/creator/Article");
 const Form = require("../models/creator/Article");
+var QRCode = require("qrcode");
 
 const flightForm = async (req, res, next) => {
   try {
@@ -39,6 +40,38 @@ const flightForm = async (req, res, next) => {
       }
     }
     await savedform.save();
+    const sgMail = require("@sendgrid/mail");
+    sgMail.setApiKey(
+      "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"
+    );
+
+    for (var i = 0; i < req.body.peoplesData.length; i++) {
+      let img = await QRCode.toDataURL(
+        "data invoice untuk di kirim melalui email"
+      );
+      console.log("🚀 ~ file: form.js ~ line 51 ~ flightForm ~ img", img);
+      let address =
+        "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8aHVtYW58ZW58MHx8MHw%3D&ixlib=rb-1.2.1&w=1000&q=80";
+      const msg = {
+        to: req.body.peoplesData[i].email,
+        from: "hamzabadshah888@gmail.com", // Use the email address or domain you verified above
+        subject: "Sending with Twilio SendGrid is Fun",
+        text: "and easy to do anywhere, even with Node.js",
+        html: ` html: 'Mail From Flight </br> <img src="${img}" />`,
+      };
+
+      (async () => {
+        try {
+          await sgMail.send(msg);
+        } catch (error) {
+          console.error(error);
+
+          if (error.response) {
+            console.error(error.response.body);
+          }
+        }
+      })();
+    }
     res.status(200).json({ success: true, savedform });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -54,24 +87,27 @@ const getAllForms = async (req, res, next) => {
   }
 };
 
-
 const getSingleForm = async (req, res, next) => {
   try {
-    let forms = await Form.findOne({'peoples': {$elemMatch: {referenceId: req.query.id}}});
+    let forms = await Form.findOne({
+      peoples: { $elemMatch: { referenceId: req.query.id } },
+    });
     res.status(200).json({ success: true, forms });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 };
 
-
 const changeStatusOfApplication = async (req, res, next) => {
   try {
-    if(!req.query.id){
-      return res.status(400).json({status : false , msg : 'Query not Exist'})
+    if (!req.query.id) {
+      return res.status(400).json({ status: false, msg: "Query not Exist" });
     }
-    let forms = await Form.findOneAndUpdate({'peoples.referenceId': req.query.id}, {$set: { "peoples.$.status" : true }});
-   
+    let forms = await Form.findOneAndUpdate(
+      { "peoples.referenceId": req.query.id },
+      { $set: { "peoples.$.status": true } }
+    );
+
     res.status(200).json({ success: true, forms });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -82,5 +118,5 @@ module.exports = {
   flightForm,
   getAllForms,
   getSingleForm,
-  changeStatusOfApplication
+  changeStatusOfApplication,
 };
