@@ -1,5 +1,4 @@
-const Article = require("../models/creator/Article");
-const Form = require("../models/creator/Article");
+const Form = require("../models/Form/Form");
 var QRCode = require("qrcode");
 var parser = require("fast-xml-parser");
 var axios = require('axios')
@@ -34,7 +33,7 @@ const flightForm = async (req, res, next) => {
       amountPaid: req.body.amountPaid,
       appointmentDate: req.body.appointmentDate,
     };
-    let savedform = await Article.create(formData);
+    let savedform = await Form.create(formData);
     const counterSaver = () => {
       return (counter = counter + 1);
     };
