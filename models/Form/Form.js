@@ -39,22 +39,6 @@ const FormSchema = new Schema(
       type: String,
       required: false,
     },
-    cardHolderName: {
-      type: String,
-      required: false,
-    },
-    cardNumber: {
-      type: String,
-      required: false,
-    },
-    cvv: {
-      type: String,
-      required: false,
-    },
-    expiryDate: {
-      type: String,
-      required: false,
-    },
     appointmentDate : {
       type: String,
       required: false,

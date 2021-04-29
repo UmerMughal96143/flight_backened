@@ -25,10 +25,6 @@ const flightForm = async (req, res, next) => {
       city: req.body.data[2].city,
       flightTime: req.body.data[3].flightTime.Hours,
       startDate: req.body.data[3].startDate,
-      cardHolderName: req.body.paymentData.cardHolderName,
-      cardNumber: req.body.paymentData.cardNumber,
-      cvv: req.body.paymentData.cvv,
-      expiryDate: req.body.paymentData.expiryDate,
       referenceId: `AH/2021 ${allFormsLength.length + 1}`,
       amountPaid: req.body.amountPaid,
       appointmentDate: req.body.appointmentDate,
@@ -134,10 +130,10 @@ console.log("🚀 ~ file: form.js ~ line 124 ~ emerchantPayApi ~ req", req.body)
     <return_success_url>https://www.myflightpass.io/paymentsuccess</return_success_url>
     <return_failure_url>https://www.myflightpass.io/paymentfail</return_failure_url>
     <return_cancel_url>https://www.myflightpass.io/paymentdetails</return_cancel_url>
-    <amount>${req.body.amountPaid}</amount>
+    <amount>${ parseInt(req.body.amountPaid)}</amount>
     <currency>GBP</currency>
-    <customer_email>Test@test.com</customer_email>
-    <customer_phone>0300000000000000</customer_phone>
+    <customer_email>${req.body.email}</customer_email>
+    <customer_phone>${req.body.mobile}</customer_phone>
     <billing_address>
     <address1>14 HIGH ROAD</address1>
     <zip_code>RM6 6PR</zip_code>
