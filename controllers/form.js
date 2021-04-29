@@ -132,16 +132,14 @@ console.log("🚀 ~ file: form.js ~ line 124 ~ emerchantPayApi ~ req", req.body)
     <transaction_id>${Math.floor(Math.random() * 1000000000000)}</transaction_id>
     <usage>usage</usage>
     <notification_url>http://example.com/genesis.php</notification_url>
-    <return_success_url>http://localhost:3000/paymentdetails</return_success_url>
-    <return_failure_url>http://localhost:3000/paymentdetails</return_failure_url>
-    <return_cancel_url>http://localhost:3000/paymentdetails</return_cancel_url>
+    <return_success_url>https://www.myflightpass.io/paymentsuccess</return_success_url>
+    <return_failure_url>https://www.myflightpass.io/paymentfail</return_failure_url>
+    <return_cancel_url>https://www.myflightpass.io/paymentdetails</return_cancel_url>
     <amount>${req.body.amountPaid}</amount>
     <currency>GBP</currency>
     <customer_email>${req.body.peoplesData[0].email}</customer_email>
     <customer_phone>${req.body.peoplesData[0].mobile}</customer_phone>
     <billing_address>
-    <first_name>${req.body.peoplesData[0].firstName}</first_name>
-    <last_name>${req.body.peoplesData[0].lastName}</last_name>
     <address1>14 HIGH ROAD</address1>
     <zip_code>RM6 6PR</zip_code>
     <city>LONDON</city>
