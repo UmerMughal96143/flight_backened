@@ -121,6 +121,7 @@ const changeStatusOfApplication = async (req, res, next) => {
 
 
 const emerchantPayApi = async (req, res, next) => {
+console.log("🚀 ~ file: form.js ~ line 124 ~ emerchantPayApi ~ req", req.body)
   try {
 
     const config = {
@@ -130,18 +131,17 @@ const emerchantPayApi = async (req, res, next) => {
     let xmlData = `<wpf_payment>
     <transaction_id>${Math.floor(Math.random() * 1000000000000)}</transaction_id>
     <usage>usage</usage>
-    <description>description</description>
     <notification_url>http://example.com/genesis.php</notification_url>
     <return_success_url>http://localhost:3000/paymentdetails</return_success_url>
     <return_failure_url>http://localhost:3000/paymentdetails</return_failure_url>
     <return_cancel_url>http://localhost:3000/paymentdetails</return_cancel_url>
-    <amount>1000000</amount>
+    <amount>${req.body.amountPaid}</amount>
     <currency>GBP</currency>
-    <customer_email>new_email@example.com</customer_email>
-    <customer_phone>1234567890</customer_phone>
+    <customer_email>${req.body.peoplesData[0].email}</customer_email>
+    <customer_phone>${req.body.peoplesData[0].mobile}</customer_phone>
     <billing_address>
-    <first_name>FirstName</first_name>
-    <last_name>LastName</last_name>
+    <first_name>${req.body.peoplesData[0].firstName}</first_name>
+    <last_name>${req.body.peoplesData[0].lastName}</last_name>
     <address1>14 HIGH ROAD</address1>
     <zip_code>RM6 6PR</zip_code>
     <city>LONDON</city>
