@@ -136,8 +136,6 @@ console.log("🚀 ~ file: form.js ~ line 124 ~ emerchantPayApi ~ req", req.body)
     <return_cancel_url>https://www.myflightpass.io/paymentdetails</return_cancel_url>
     <amount>${req.body.amountPaid}</amount>
     <currency>GBP</currency>
-    <customer_email>${req.body.peoplesData[0].email}</customer_email>
-    <customer_phone>${req.body.peoplesData[0].mobile}</customer_phone>
     <billing_address>
     <address1>14 HIGH ROAD</address1>
     <zip_code>RM6 6PR</zip_code>
