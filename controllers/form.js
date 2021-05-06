@@ -1,8 +1,7 @@
 const Form = require("../models/Form/Form");
-var QRCode = require("qrcode");
-var parser = require("fast-xml-parser");
-var axios = require('axios')
-var he = require('he')
+const Stripe = require('stripe')
+
+const stripe = new Stripe("sk_test_51IoCHMIvpnJMlGBHHLkhwIKEgAR36Qpt2g3ytBTKz6jAnfaW4WfaNR3IyeHM8OfZXewBKzrr4dmuTTg3qirzFbIF00gHF3dTTR")
 
 
 
@@ -40,38 +39,7 @@ const flightForm = async (req, res, next) => {
       }
     }
     await savedform.save();
-    const sgMail = require("@sendgrid/mail");
-    sgMail.setApiKey(
-      "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"
-    );
-
-    for (var i = 0; i < req.body.peoplesData.length; i++) {
-      let img = await QRCode.toDataURL(
-        "data invoice untuk di kirim melalui email"
-      );
-      console.log("🚀 ~ file: form.js ~ line 51 ~ flightForm ~ img", img);
-      let address =
-        "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8aHVtYW58ZW58MHx8MHw%3D&ixlib=rb-1.2.1&w=1000&q=80";
-      const msg = {
-        to: req.body.peoplesData[i].email,
-        from: "hamzabadshah888@gmail.com", // Use the email address or domain you verified above
-        subject: "Sending with Twilio SendGrid is Fun",
-        text: "and easy to do anywhere, even with Node.js",
-        html: ` html: 'Mail From Flight </br> <img src="${img}" />`,
-      };
-
-      (async () => {
-        try {
-          await sgMail.send(msg);
-        } catch (error) {
-          console.error(error);
-
-          if (error.response) {
-            console.error(error.response.body);
-          }
-        }
-      })();
-    }
+   
     res.status(200).json({ success: true, savedform });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -115,70 +83,20 @@ const changeStatusOfApplication = async (req, res, next) => {
 };
 
 
-const emerchantPayApi = async (req, res, next) => {
+const stripePayment = async (req, res, next) => {
 console.log("🚀 ~ file: form.js ~ line 124 ~ emerchantPayApi ~ req", req.body)
   try {
+    const {id,totalPrice} = req.body
+  const response = await stripe.paymentIntents.create({
+    amount : totalPrice * 100,
+    currency : "GBP",
+    description : "MyFlightPass",
+    payment_method : id,
+    confirm : true
+  })
+  console.log("🚀 ~ file: form.js ~ line 97 ~ stripePayment ~ response", response)
+  res.status(200).json({ success: true, response });
 
-    const config = {
-      headers: { "Content-Type": "text/xml" },
-    };
-
-    let xmlData = `<wpf_payment>
-    <transaction_id>${Math.floor(Math.random() * 1000000000000)}</transaction_id>
-    <usage>usage</usage>
-    <notification_url>http://example.com/genesis.php</notification_url>
-    <return_success_url>https://www.myflightpass.io/paymentsuccess</return_success_url>
-    <return_failure_url>https://www.myflightpass.io/paymentfail</return_failure_url>
-    <return_cancel_url>https://www.myflightpass.io/paymentdetails</return_cancel_url>
-    <amount>${ parseInt(req.body.amountPaid)}</amount>
-    <currency>GBP</currency>
-    <customer_email>${req.body.email}</customer_email>
-    <customer_phone>${req.body.mobile}</customer_phone>
-    <billing_address>
-    <address1>14 HIGH ROAD</address1>
-    <zip_code>RM6 6PR</zip_code>
-    <city>LONDON</city>
-    <state/>
-    <country>GB</country>
-    </billing_address>
-    <transaction_types>
-    <transaction_type name="authorize3d"/>
-    </transaction_types>
-   </wpf_payment>`;
-
-   
-    let result = await axios.post("https://staging.wpf.emerchantpay.net/en/wpf", xmlData, {
-      headers: {
-        "Content-Type": "text/xml",
-      },
-      auth: {
-        username: "afec0aff1e20c8950568e32771412e9757640721",
-        password: "c23d19d0180b179d2d6d6509d1e8c0c03778902d",
-      },
-    });
-
-    var options = {
-      attributeNamePrefix: "@_",
-      attrNodeName: "attr", //default is 'false'
-      textNodeName: "#text",
-      ignoreAttributes: true,
-      ignoreNameSpace: false,
-      allowBooleanAttributes: false,
-      parseNodeValue: true,
-      parseAttributeValue: false,
-      trimValues: true,
-      cdataTagName: "__cdata", //default is 'false'
-      cdataPositionChar: "\\c",
-      parseTrueNumberOnly: false,
-      arrayMode: false, //"strict"
-      attrValueProcessor: (val, attrName) =>
-        he.decode(val, { isAttributeValue: true }), //default is a=>a
-      tagValueProcessor: (val, tagName) => he.decode(val), //default is a=>a
-      stopNodes: ["parse-me-as-string"],
-    };
-
-    var jsonObj = parser.parse(result.data, options, true);
-    res.status(200).json({ success: true, payment : jsonObj.wpf_payment });
 
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -189,5 +107,5 @@ module.exports = {
   getAllForms,
   getSingleForm,
   changeStatusOfApplication,
-  emerchantPayApi
+  stripePayment
 };

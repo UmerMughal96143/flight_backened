@@ -5,13 +5,13 @@ const {
   getAllForms,
   getSingleForm,
   changeStatusOfApplication,
-  emerchantPayApi
+  stripePayment
 } = require("../controllers/form");
 
 router.post("/form", flightForm);
 router.get("/form", getAllForms);
 router.get("/get/form", getSingleForm);
 router.post("/form/status", changeStatusOfApplication);
-router.post("/form/pay", emerchantPayApi);
+router.post("/pay", stripePayment);
 
 module.exports = router;
