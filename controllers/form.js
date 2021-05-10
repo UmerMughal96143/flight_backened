@@ -84,7 +84,6 @@ const changeStatusOfApplication = async (req, res, next) => {
 
 
 const stripePayment = async (req, res, next) => {
-console.log("🚀 ~ file: form.js ~ line 124 ~ emerchantPayApi ~ req", req.body)
   try {
     const {id,totalPrice} = req.body
   const response = await stripe.paymentIntents.create({
@@ -94,7 +93,6 @@ console.log("🚀 ~ file: form.js ~ line 124 ~ emerchantPayApi ~ req", req.body)
     payment_method : id,
     confirm : true
   })
-  console.log("🚀 ~ file: form.js ~ line 97 ~ stripePayment ~ response", response)
   res.status(200).json({ success: true, response });
 
 
@@ -102,10 +100,38 @@ console.log("🚀 ~ file: form.js ~ line 124 ~ emerchantPayApi ~ req", req.body)
     res.status(500).json({ success: false, error: err.message });
   }
 };
+
+
+
+
+const atechyPayment = async (req, res, next) => {
+    try {
+      const {id} = req.body
+    const response = await stripe.paymentIntents.create({
+      amount : 150 * 100,
+      currency : "GBP",
+      description : "Atechy Health",
+      payment_method : id,
+      confirm : true
+    })
+    res.status(200).json({ success: true, response });
+  
+  
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  };
+
+
+
+
+
+
 module.exports = {
   flightForm,
   getAllForms,
   getSingleForm,
   changeStatusOfApplication,
-  stripePayment
+  stripePayment,
+  atechyPayment
 };
