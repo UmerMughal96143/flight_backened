@@ -1,9 +1,9 @@
 const Form = require("../models/Form/Form");
-const Stripe = require('stripe')
+const Stripe = require("stripe");
 
-const stripe = new Stripe("sk_test_51IoCHMIvpnJMlGBHHLkhwIKEgAR36Qpt2g3ytBTKz6jAnfaW4WfaNR3IyeHM8OfZXewBKzrr4dmuTTg3qirzFbIF00gHF3dTTR")
-
-
+const stripe = new Stripe(
+  "sk_test_51IoCHMIvpnJMlGBHHLkhwIKEgAR36Qpt2g3ytBTKz6jAnfaW4WfaNR3IyeHM8OfZXewBKzrr4dmuTTg3qirzFbIF00gHF3dTTR"
+);
 
 const flightForm = async (req, res, next) => {
   try {
@@ -39,7 +39,7 @@ const flightForm = async (req, res, next) => {
       }
     }
     await savedform.save();
-   
+
     res.status(200).json({ success: true, savedform });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -82,50 +82,40 @@ const changeStatusOfApplication = async (req, res, next) => {
   }
 };
 
-
 const stripePayment = async (req, res, next) => {
   try {
-    const {id,totalPrice} = req.body
-  const response = await stripe.paymentIntents.create({
-    amount : totalPrice * 100,
-    currency : "GBP",
-    description : "MyFlightPass",
-    payment_method : id,
-    confirm : true
-  })
-  res.status(200).json({ success: true, response });
-
-
+    const { id, totalPrice } = req.body;
+    const response = await stripe.paymentIntents.create({
+      amount: totalPrice * 100,
+      currency: "GBP",
+      description: "MyFlightPass",
+      payment_method: id,
+      confirm: true,
+    });
+    res.status(200).json({ success: true, response });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 };
 
-
-
-
 const atechyPayment = async (req, res, next) => {
-    try {
-      const {id} = req.body
+  try {
+    const { id, reference_id } = req.body;
     const response = await stripe.paymentIntents.create({
-      amount : 150 * 100,
-      currency : "GBP",
-      description : "Atechy Health",
-      payment_method : id,
-      confirm : true
-    })
+      amount: 150 * 100,
+      currency: "GBP",
+      description: `Atechy Health payment ref ID : ( ${reference_id} ) `,
+      payment_method: id,
+      metadata: {
+        order_id: `${reference_id}`,
+      },
+      confirm: true,
+    });
     res.status(200).json({ success: true, response });
-  
-  
-    } catch (err) {
-      res.status(500).json({ success: false, error: err.message });
-    }
-  };
-
-
-
-
-
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 
 module.exports = {
   flightForm,
@@ -133,5 +123,5 @@ module.exports = {
   getSingleForm,
   changeStatusOfApplication,
   stripePayment,
-  atechyPayment
+  atechyPayment,
 };
